@@ -1,4 +1,4 @@
-# Ando Vending Machine - Full Stack Application
+# Ando Tea House - Full Stack Application
 
 A web-based ordering system for the Ando robot dog vending machine that serves matcha lattes. The system features real-time status updates as the robot prepares and dispenses drinks.
 
