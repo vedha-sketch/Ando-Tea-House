@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-cream: #FAF7ED;
+  --text-dark: #282C15;
+  --brand-green: #15452D;
+  --link-green: #113626;
+  --card-light: #F2F2F2;
+  --card-offwhite: #FAF9F5;
+  --accent-terracotta: rgba(217, 119, 87, 0.15);
+  --near-black: #141413;
+
+  --spacing-xs: 10px;
+  --spacing-sm: 18px;
+  --spacing-md: 30px;
+  --spacing-lg: 60px;
+  --spacing-xl: 120px;
+
+  --radius-nav: 10px;
+  --radius-card: 18px;
+  --radius-button: 10px;
+  --radius-avatar: 50%;
+
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-dark);
+  background-color: var(--bg-cream);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: var(--bg-cream);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-family: "Lufga", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 74px;
+  line-height: 74px;
+  font-weight: 300;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+h2 {
+  font-family: "Lufga", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 80px;
+  line-height: 80px;
+  font-weight: 300;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+h3 {
+  font-family: "Lufga", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 35px;
+  line-height: auto;
+  font-weight: 300;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+/* Links */
+
+a {
+  color: var(--link-green);
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Buttons */
+
+button {
+  background-color: var(--brand-green);
+  color: var(--bg-cream);
+  border: none;
+  padding: 16px 32px;
+  border-radius: var(--radius-button);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Forms */
+
+input,
+textarea,
+select {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--card-light);
+  border-radius: var(--radius-button);
+  color: var(--text-dark);
+  background-color: var(--card-offwhite);
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(21, 69, 45, 0.1);
+}
+
+input::placeholder {
+  color: rgba(40, 44, 21, 0.5);
+}
+
+/* Cards */
+
+.card {
+  background-color: var(--card-light);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Layout */
+
+.container {
+  width: 100%;
+  max-width: 1082px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-sm);
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  padding: var(--spacing-xs);
+  gap: var(--spacing-xs);
+}
+
+.page-section {
+  background-color: var(--bg-cream);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Scrollbar styling */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--link-green);
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 48px;
+    line-height: 48px;
+  }
+
+  h2 {
+    font-size: 42px;
+    line-height: 42px;
+  }
+
+  h3 {
+    font-size: 28px;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  .page-wrapper {
+    padding: var(--spacing-xs);
+  }
+}

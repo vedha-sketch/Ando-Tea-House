@@ -1,0 +1,146 @@
+.checkout-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.checkout-container h1 {
+  font-size: 48px;
+  text-align: center;
+}
+
+.order-summary {
+  background: var(--card-light);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-md);
+}
+
+.order-summary h3 {
+  font-size: 18px;
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(40, 44, 21, 0.6);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+  font-size: 16px;
+}
+
+.summary-row.total {
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--brand-green);
+}
+
+.summary-divider {
+  height: 1px;
+  background: rgba(40, 44, 21, 0.1);
+  margin: var(--spacing-sm) 0;
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dark);
+}
+
+.form-group input {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 16px;
+  border: 1px solid var(--card-light);
+  border-radius: var(--radius-button);
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(21, 69, 45, 0.1);
+}
+
+.form-group small {
+  color: rgba(40, 44, 21, 0.5);
+  font-size: 12px;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--brand-green);
+  color: var(--bg-cream);
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background: transparent;
+  color: var(--brand-green);
+  border: 2px solid var(--brand-green);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+  background: var(--brand-green);
+  color: var(--bg-cream);
+}
+
+.security-note {
+  text-align: center;
+  color: rgba(40, 44, 21, 0.6);
+  font-size: 13px;
+  padding: var(--spacing-sm);
+  background: rgba(21, 69, 45, 0.05);
+  border-radius: var(--radius-button);
+}
+
+.error-message {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(217, 119, 87, 0.15);
+  border: 1px solid var(--brand-green);
+  color: var(--brand-green);
+  border-radius: var(--radius-button);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .checkout-container h1 {
+    font-size: 36px;
+  }
+}

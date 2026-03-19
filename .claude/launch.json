@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Ando Frontend",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["ando-vending-frontend/node_modules/vite/bin/vite.js", "--config", "ando-vending-frontend/vite.config.js"],
+      "port": 5173
+    },
+    {
+      "name": "Ando Backend",
+      "runtimeExecutable": "C:\\Program Files (x86)\\Thonny\\python.exe",
+      "runtimeArgs": ["main.py"],
+      "port": 8000
+    }
+  ]
+}
