@@ -26,7 +26,7 @@ function triggerHaptic(pattern = 'pulse') {
   }
 }
 
-function PreparationView({ drink, orderId, videoUrl, progress }) {
+function PreparationView({ drink, orderId, videoUrl, progress, onVideoComplete }) {
   return (
     <div className="zen-view preparation-view">
       {/* Framed video container */}
@@ -35,10 +35,10 @@ function PreparationView({ drink, orderId, videoUrl, progress }) {
           <video
             src={videoUrl}
             autoPlay
-            loop
             muted
             playsInline
             className="preparation-video"
+            onEnded={onVideoComplete}
             style={{
               objectFit: 'cover',
               width: '100%',
@@ -159,26 +159,24 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
   const [currentStage, setCurrentStage] = useState(4)
   const [progress, setProgress] = useState(0)
   const [currentView, setCurrentView] = useState('PREPARATION')
+  const [videoCompleted, setVideoCompleted] = useState(false)
 
+  const handleVideoComplete = () => {
+    setVideoCompleted(true)
+    // Move to fulfillment stage after video completes
+    setCurrentStage(5)
+    setCurrentView('FULFILLMENT')
+  }
+
+  // Update progress based on stage (only while video is playing)
   useEffect(() => {
-    // Simulate stage progression
-    const stageInterval = setInterval(() => {
-      setCurrentStage(prev => {
-        const next = prev < 6 ? prev + 1 : 6
-        const view = getViewFromStage(next)
-        setCurrentView(view)
-        return next
-      })
-    }, 8000) // Progress through stages every 8 seconds
-
-    return () => clearInterval(stageInterval)
-  }, [])
-
-  // Update progress based on stage
-  useEffect(() => {
-    const stageProgress = (currentStage / 6) * 100
-    setProgress(stageProgress)
-  }, [currentStage])
+    if (!videoCompleted) {
+      const stageProgress = (currentStage / 6) * 100
+      setProgress(stageProgress)
+    } else {
+      setProgress(100)
+    }
+  }, [currentStage, videoCompleted])
 
   const drink = orderData || { drinkName: 'Matcha Latte', size: 'Small' }
 
@@ -202,6 +200,7 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
           orderId={orderId}
           videoUrl="/videos/matcha.mp4"
           progress={progress}
+          onVideoComplete={handleVideoComplete}
         />
       ) : (
         <FulfillmentView
