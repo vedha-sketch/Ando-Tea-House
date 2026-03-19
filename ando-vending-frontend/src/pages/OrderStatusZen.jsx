@@ -121,7 +121,8 @@ function FulfillmentView({ drink, orderId, onPickup }) {
 
   return (
     <div className="zen-view fulfillment-view">
-      <div className="fulfillment-content">
+      {/* Glassmorphism card */}
+      <div className="fulfillment-card">
         {/* Ready badge */}
         <div className="ready-badge">
           <span className="ready-dot pulse" />
@@ -134,36 +135,26 @@ function FulfillmentView({ drink, orderId, onPickup }) {
           {drink.drinkName} · {drink.size}
         </p>
 
-        {/* Visual cue - animated arrow */}
+        {/* Visual cue - thin chevron with pulse */}
         <div className={`visual-cue ${showAnimation ? 'animate' : ''}`}>
-          <div className="arrow-pointing">↓</div>
+          <svg className="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="#556B2F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
           <p className="cue-text">Look for the window</p>
         </div>
 
-        {/* Order ID for reference */}
-        <div className="order-reference">
-          <span className="ref-label">Order</span>
-          <span className="ref-id">{orderId}</span>
-        </div>
-
-        {/* Pickup button */}
+        {/* Pill-shaped confirm button */}
         <button
           onClick={onPickup}
-          className="pickup-button"
-          style={{
-            backgroundColor: matcha.vibrant,
-            color: '#fff',
-            padding: `${spacing.lg} ${spacing.xl}`,
-            borderRadius: borderRadius.lg,
-            border: 'none',
-            fontSize: '16px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            marginTop: spacing.md,
-          }}
+          className="pickup-button-pill"
         >
           Confirm Pickup
         </button>
+      </div>
+
+      {/* Order ID footer - decluttered from main view */}
+      <div className="order-footer">
+        Order {orderId}
       </div>
     </div>
   )
