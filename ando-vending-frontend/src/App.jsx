@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import ScanQRZen from './pages/ScanQRZen'
 import MenuZen from './pages/MenuZen'
 import CheckoutZen from './pages/CheckoutZen'
 import OrderStatusZen from './pages/OrderStatusZen'
 import ConfirmationZen from './pages/ConfirmationZen'
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('scan') // scan, menu, checkout, status, confirmation
+  const [currentPage, setCurrentPage] = useState('menu') // menu, checkout, status, confirmation
   const [orderId, setOrderId] = useState(null)
   const [sessionId, setSessionId] = useState(null)
   const [selectedDrink, setSelectedDrink] = useState(null)
   const [orderData, setOrderData] = useState(null)
 
-  const handleSessionStart = (sid) => {
+  useEffect(() => {
+    // Generate a simple session ID on app load
+    const sid = 'session-' + Date.now()
     setSessionId(sid)
-    setCurrentPage('menu')
-  }
+  }, [])
 
   const handleDrinkSelect = (drink) => {
     setSelectedDrink(drink)
@@ -34,16 +34,14 @@ export default function App() {
   }
 
   const handleReset = () => {
-    setCurrentPage('scan')
+    setCurrentPage('menu')
     setOrderId(null)
-    setSessionId(null)
     setSelectedDrink(null)
     setOrderData(null)
   }
 
   return (
     <div className="page-wrapper">
-      {currentPage === 'scan' && <ScanQRZen onSessionStart={handleSessionStart} />}
       {currentPage === 'menu' && <MenuZen sessionId={sessionId} onDrinkSelect={handleDrinkSelect} />}
       {currentPage === 'checkout' && (
         <CheckoutZen
