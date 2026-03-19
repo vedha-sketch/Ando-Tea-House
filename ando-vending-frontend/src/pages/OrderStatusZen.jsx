@@ -200,7 +200,7 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
         <PreparationView
           drink={drink}
           orderId={orderId}
-          videoUrl={null}
+          videoUrl="/videos/matcha.mp4"
           progress={progress}
         />
       ) : (
