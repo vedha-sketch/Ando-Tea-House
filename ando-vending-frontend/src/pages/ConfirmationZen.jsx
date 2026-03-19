@@ -15,13 +15,14 @@ export default function ConfirmationZen({ onReset }) {
       className="zen-confirmation"
       style={{
         backgroundColor: colors.cream,
-        minHeight: '100vh',
-        padding: spacing.lg,
+        height: '100dvh',
+        padding: `${spacing.lg} ${spacing.lg} max(${spacing.lg}, env(safe-area-inset-bottom))`,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         fontFamily: '"Inter", sans-serif',
+        overflow: 'hidden',
       }}
     >
       <div className="confirmation-card">

@@ -185,13 +185,14 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
       className="zen-order-status"
       style={{
         backgroundColor: colors.cream,
-        minHeight: '100vh',
+        height: '100dvh',
+        padding: `${spacing.lg} ${spacing.lg} max(${spacing.lg}, env(safe-area-inset-bottom))`,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: spacing.lg,
         fontFamily: '"Inter", sans-serif',
+        overflow: 'hidden',
       }}
     >
       {currentView === 'PREPARATION' ? (
