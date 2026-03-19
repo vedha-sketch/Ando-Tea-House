@@ -45,14 +45,19 @@ async def create_order(order_data: OrderCreate):
         "updatedAt": datetime.now(),
     }
 
-    orders_db[order_id] = order
-    active_order = order_id
+    # For MVP: simulate payment success immediately
+    order["status"] = OrderStatus.PAID
 
-    logger.info(f"Order created: {order_id}")
+    orders_db[order_id] = order
+    # Don't lock the machine for MVP — allow multiple test orders
+    # In production, active_order would be set and cleared by the Pi
+    # active_order = order_id
+
+    logger.info(f"Order created and payment simulated: {order_id}")
 
     return OrderResponse(
         orderId=order_id,
-        status=OrderStatus.PENDING,
+        status=OrderStatus.PAID,
         drinkName=order["drinkName"],
         size=order["size"]
     )
@@ -103,3 +108,16 @@ async def complete_order(order_id: str):
     logger.info(f"Order completed: {order_id}")
 
     return {"status": "completed", "orderId": order_id}
+
+@router.post("/machine/reset")
+async def reset_machine():
+    """Reset the machine state (dev/admin only)"""
+    global active_order
+    active_order = None
+    logger.info("Machine state reset")
+    return {"status": "reset", "activeOrder": None}
+
+@router.get("/machine/status")
+async def machine_status():
+    """Check if the machine is available"""
+    return {"isAvailable": active_order is None, "activeOrder": active_order}

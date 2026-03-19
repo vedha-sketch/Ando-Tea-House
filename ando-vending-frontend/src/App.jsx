@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import ScanQR from './pages/ScanQR'
-import Menu from './pages/Menu'
-import Checkout from './pages/Checkout'
-import OrderStatus from './pages/OrderStatus'
-import Confirmation from './pages/Confirmation'
+import ScanQRZen from './pages/ScanQRZen'
+import MenuZen from './pages/MenuZen'
+import CheckoutZen from './pages/CheckoutZen'
+import OrderStatusZen from './pages/OrderStatusZen'
+import ConfirmationZen from './pages/ConfirmationZen'
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('scan') // scan, menu, checkout, status, confirmation
@@ -43,10 +43,10 @@ export default function App() {
 
   return (
     <div className="page-wrapper">
-      {currentPage === 'scan' && <ScanQR onSessionStart={handleSessionStart} />}
-      {currentPage === 'menu' && <Menu sessionId={sessionId} onDrinkSelect={handleDrinkSelect} />}
+      {currentPage === 'scan' && <ScanQRZen onSessionStart={handleSessionStart} />}
+      {currentPage === 'menu' && <MenuZen sessionId={sessionId} onDrinkSelect={handleDrinkSelect} />}
       {currentPage === 'checkout' && (
-        <Checkout
+        <CheckoutZen
           sessionId={sessionId}
           drink={selectedDrink}
           onPaymentSuccess={handlePaymentSuccess}
@@ -54,13 +54,13 @@ export default function App() {
         />
       )}
       {currentPage === 'status' && (
-        <OrderStatus
+        <OrderStatusZen
           orderId={orderId}
           orderData={orderData}
           onOrderComplete={handleOrderComplete}
         />
       )}
-      {currentPage === 'confirmation' && <Confirmation onReset={handleReset} />}
+      {currentPage === 'confirmation' && <ConfirmationZen onReset={handleReset} />}
     </div>
   )
 }

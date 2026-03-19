@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import './ScanQR.css'
+import { colors, spacing, borderRadius } from '../styles/design-system'
+import './ScanQRZen.css'
 
-export default function ScanQR({ onSessionStart }) {
+export default function ScanQRZen({ onSessionStart }) {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const [error, setError] = useState(null)
@@ -17,7 +18,6 @@ export default function ScanQR({ onSessionStart }) {
 
     const startCamera = async () => {
       try {
-        // Dynamically import jsQR only when camera is available
         const module = await import('jsqr')
         jsQR = module.default
 
@@ -87,7 +87,6 @@ export default function ScanQR({ onSessionStart }) {
         }
       })
       .catch(() => {
-        // If backend is unreachable, still allow session start for dev
         console.warn('Backend unreachable, starting session locally')
         onSessionStart(sessionId)
       })
@@ -103,78 +102,93 @@ export default function ScanQR({ onSessionStart }) {
   }
 
   return (
-    <div className="page-content">
-      <div className="page-inner">
-        <div className="scan-container">
-          <h1>Scan QR Code</h1>
-          <p>Position the QR code on the vending machine in view of your camera.</p>
-
-          {error && <div className="error-message">{error}</div>}
-
-          {cameraAvailable && (
-            <div className="camera-wrapper">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                className="camera-feed"
-              />
-              <canvas ref={canvasRef} style={{ display: 'none' }} />
-              {!scanned && <div className="scan-overlay" />}
-              {scanned && <div className="scan-success">✓ QR Code scanned!</div>}
-            </div>
-          )}
-
-          {!cameraAvailable && (
-            <div className="camera-wrapper">
-              <div className="camera-placeholder">
-                <p>Camera not available</p>
-                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Use the form below to enter your session ID</p>
-              </div>
-            </div>
-          )}
-
-          {showManualInput ? (
-            <form onSubmit={handleManualSubmit} className="manual-input-form">
-              <input
-                type="text"
-                placeholder="Enter Session ID"
-                value={manualId}
-                onChange={(e) => setManualId(e.target.value)}
-                disabled={validating}
-                autoFocus
-              />
-              <button type="submit" disabled={validating || !manualId.trim()}>
-                {validating ? 'Connecting...' : 'Connect'}
-              </button>
-            </form>
-          ) : (
-            <button
-              onClick={() => setShowManualInput(true)}
-              className="secondary-button"
-            >
-              Enter ID Manually
-            </button>
-          )}
-
-          {/* Dev shortcut for testing */}
-          <button
-            onClick={() => onSessionStart(`dev-${Date.now()}`)}
-            className="dev-button"
-            style={{
-              marginTop: '1rem',
-              background: 'transparent',
-              border: '1px dashed rgba(43, 55, 41, 0.3)',
-              color: 'rgba(43, 55, 41, 0.5)',
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '0.8rem',
-            }}
-          >
-            Skip — Dev Mode
-          </button>
+    <div
+      className="zen-scan"
+      style={{
+        backgroundColor: colors.cream,
+        minHeight: '100vh',
+        padding: spacing.lg,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontFamily: '"Inter", sans-serif',
+      }}
+    >
+      <div className="scan-card">
+        {/* Header */}
+        <div className="scan-header">
+          <h1>Welcome to Ando</h1>
+          <p>Scan the QR code on the machine to begin</p>
         </div>
+
+        {error && <div className="error-message-zen">{error}</div>}
+
+        {/* Camera view */}
+        {cameraAvailable && (
+          <div className="camera-frame">
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              className="camera-feed"
+            />
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
+            {!scanned && <div className="scan-overlay-zen" />}
+            {scanned && <div className="scan-success-zen">✓ QR Code Scanned</div>}
+          </div>
+        )}
+
+        {!cameraAvailable && (
+          <div className="camera-frame">
+            <div className="camera-placeholder-zen">
+              <div className="placeholder-icon">📱</div>
+              <p>Camera not available</p>
+              <p className="placeholder-hint">Enter your session ID below</p>
+            </div>
+          </div>
+        )}
+
+        {/* Input/Actions */}
+        {showManualInput ? (
+          <form onSubmit={handleManualSubmit} className="manual-form-zen">
+            <input
+              type="text"
+              placeholder="Enter Session ID"
+              value={manualId}
+              onChange={(e) => setManualId(e.target.value)}
+              disabled={validating}
+              autoFocus
+              className="session-input"
+            />
+            <button
+              type="submit"
+              disabled={validating || !manualId.trim()}
+              className="connect-button"
+              style={{
+                backgroundColor: validating || !manualId.trim() ? colors.stone300 : colors.matcha,
+                color: colors.white,
+              }}
+            >
+              {validating ? 'Connecting...' : 'Connect'}
+            </button>
+          </form>
+        ) : (
+          <button
+            onClick={() => setShowManualInput(true)}
+            className="enter-manually-btn"
+          >
+            Enter ID Manually
+          </button>
+        )}
+
+        {/* Dev mode button */}
+        <button
+          onClick={() => onSessionStart(`dev-${Date.now()}`)}
+          className="dev-mode-btn"
+        >
+          Skip — Dev Mode
+        </button>
       </div>
     </div>
   )

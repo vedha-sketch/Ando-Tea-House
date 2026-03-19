@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npm --version)",
+      "Read(//c/Program Files/nodejs//**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(where python:*)",
+      "Bash(timeout 2 bash -c 'echo > /dev/tcp/localhost/5173')",
+      "Bash(timeout 2 bash -c 'echo > /dev/tcp/localhost/8000')",
+      "Bash(\"/c/Program Files \\(x86\\)/Thonny/python.exe\" -m pip --version)",
+      "Bash(\"/c/Program Files \\(x86\\)/Thonny/python.exe\" -m pip install -r requirements.txt)",
+      "Bash(curl -s http://127.0.0.1:8000/api/health)"
+    ]
+  }
+}

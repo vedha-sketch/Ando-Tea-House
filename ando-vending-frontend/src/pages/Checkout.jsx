@@ -11,8 +11,16 @@ export default function Checkout({ sessionId, drink, onPaymentSuccess, onCancel 
     setProcessing(true)
     setError(null)
 
+    // Basic card validation for test mode
+    const cleanCard = cardNumber.replace(/\s/g, '')
+    if (cleanCard.length !== 16 || !/^\d+$/.test(cleanCard)) {
+      setError('Please enter a valid 16-digit card number.')
+      setProcessing(false)
+      return
+    }
+
     try {
-      // Call backend to create payment intent
+      // Call backend to create order with simulated payment
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

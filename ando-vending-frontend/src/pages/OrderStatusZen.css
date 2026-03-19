@@ -1,0 +1,325 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap');
+
+.zen-order-status {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Shared view styles */
+.zen-view {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* PREPARATION VIEW */
+.preparation-view {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.video-frame {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border: 12px solid white;
+  border-radius: 48px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f3f0 0%, #fdfcf8 100%);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f5f3f0 0%, #fdfcf8 100%);
+  color: #738065;
+}
+
+.placeholder-icon {
+  font-size: 64px;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.placeholder-icon + p {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.preparation-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preparation-content {
+  width: 100%;
+  text-align: center;
+  animation: slideUp 0.6s ease-out 0.2s both;
+}
+
+.status-message {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0;
+  color: #ffbf00;
+}
+
+.drink-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0.5rem 0 0;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.drink-detail {
+  font-size: 14px;
+  color: #a1a1a1;
+  margin: 0.25rem 0 2rem;
+}
+
+/* Progress ring */
+.progress-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: 600;
+  color: #738065;
+}
+
+/* Breathing pulse animation */
+.breathing-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(115, 128, 101, 0.1) 0%, transparent 70%);
+  animation: breathingPulse 4s ease-in-out infinite;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200%;
+}
+
+@keyframes breathingPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateX(-50%) scale(0.8);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+
+/* FULFILLMENT VIEW */
+.fulfillment-view {
+  animation: fadeIn 0.6s ease-out;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.fulfillment-content {
+  text-align: center;
+  width: 100%;
+  animation: slideUp 0.6s ease-out both;
+}
+
+.ready-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(115, 128, 101, 0.1);
+  color: #738065;
+  padding: 8px 16px;
+  border-radius: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+}
+
+.ready-dot {
+  width: 8px;
+  height: 8px;
+  background: #738065;
+  border-radius: 50%;
+}
+
+.ready-dot.pulse {
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.fulfillment-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.fulfillment-subtitle {
+  font-size: 16px;
+  color: #a1a1a1;
+  margin: 0 0 2rem;
+}
+
+/* Visual cue - animated arrow */
+.visual-cue {
+  margin: 3rem 0;
+  animation: slideDown 0.8s ease-out 0.4s both;
+}
+
+.visual-cue.animate .arrow-pointing {
+  animation: arrowBounce 1.5s ease-in-out infinite;
+}
+
+.arrow-pointing {
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.cue-text {
+  font-size: 14px;
+  color: #738065;
+  margin: 0;
+  opacity: 0.7;
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+/* Order reference */
+.order-reference {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(115, 128, 101, 0.05);
+  border-radius: 20px;
+  margin: 1.5rem 0;
+}
+
+.ref-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #a1a1a1;
+  letter-spacing: 0.5px;
+}
+
+.ref-id {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: #738065;
+}
+
+/* Pickup button */
+.pickup-button {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(115, 128, 101, 0.2);
+}
+
+.pickup-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(115, 128, 101, 0.3);
+}
+
+.pickup-button:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .zen-view {
+    gap: 1rem;
+  }
+
+  .fulfillment-title {
+    font-size: 32px;
+  }
+
+  .drink-name {
+    font-size: 28px;
+  }
+}
