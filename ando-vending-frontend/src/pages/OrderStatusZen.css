@@ -1,10 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap');
 
+/* ========================================
+   GLOBAL: CREAM BG + 100dvh
+   ======================================== */
 .zen-order-status {
   font-family: 'Inter', sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  background: #F2F0E9;
 }
 
-/* Shared view styles */
+.status-bg-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(85, 107, 47, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(85, 107, 47, 0.03) 0%, transparent 50%);
+  z-index: 0;
+}
+
+.status-bg-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23556B2F' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.status-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem max(0.75rem, env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+/* ========================================
+   SHARED VIEW
+   ======================================== */
 .zen-view {
   width: 100%;
   max-width: 500px;
@@ -17,23 +55,21 @@
   overflow: hidden;
 }
 
-/* PREPARATION VIEW */
+/* ========================================
+   PREPARATION VIEW
+   ======================================== */
 .preparation-view {
   animation: fadeIn 0.6s ease-out;
-  justify-content: flex-start;
-  position: relative;
 }
 
 .video-frame {
   width: 100%;
   aspect-ratio: 9 / 16;
-  border: 10px solid rgba(255, 255, 255, 0.85);
+  border: 10px solid rgba(255, 255, 255, 0.7);
   border-radius: 48px;
   overflow: hidden;
-  background: linear-gradient(135deg, #f5f3f0 0%, #fdfcf8 100%);
-  box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(115, 128, 101, 0.06);
+  background: linear-gradient(135deg, #eae7df 0%, #F2F0E9 100%);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,39 +80,22 @@
 
 @keyframes videoGlow {
   0%, 100% {
-    box-shadow:
-      0 12px 32px rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(115, 128, 101, 0.06),
-      0 0 40px rgba(115, 128, 101, 0.05);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 0 40px rgba(115, 128, 101, 0.04);
   }
   50% {
-    box-shadow:
-      0 12px 32px rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(115, 128, 101, 0.06),
-      0 0 60px rgba(115, 128, 101, 0.12);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 0 60px rgba(115, 128, 101, 0.1);
   }
 }
 
 .video-placeholder {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f5f3f0 0%, #fdfcf8 100%);
-  color: #738065;
-}
-
-.placeholder-icon {
-  font-size: 64px;
-  margin-bottom: 1rem;
-  opacity: 0.6;
-}
-
-.placeholder-icon + p {
+  color: #9c9a8e;
   font-size: 14px;
-  opacity: 0.6;
+  font-weight: 300;
 }
 
 .preparation-video {
@@ -89,28 +108,27 @@
 .preparation-content {
   width: 100%;
   text-align: center;
-  animation: slideUp 0.6s ease-out 0.2s both;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(253, 252, 248, 0.8);
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 28px;
   padding: 1.25rem 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: slideUp 0.6s ease-out 0.2s both;
 }
 
-/* Editorial subheader */
 .status-message {
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 3px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   margin: 0;
-  color: #738065;
+  color: #556B2F;
   flex-shrink: 0;
 }
 
@@ -133,7 +151,7 @@
   font-weight: 400;
 }
 
-/* Progress ring with liquid wave */
+/* Progress ring */
 .progress-container {
   position: relative;
   width: 80px;
@@ -144,12 +162,8 @@
 }
 
 @keyframes progressGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 4px rgba(115, 128, 101, 0.15));
-  }
-  50% {
-    filter: drop-shadow(0 0 12px rgba(115, 128, 101, 0.3));
-  }
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(115, 128, 101, 0.12)); }
+  50% { filter: drop-shadow(0 0 12px rgba(115, 128, 101, 0.25)); }
 }
 
 .progress-ring {
@@ -157,7 +171,6 @@
   height: 100%;
 }
 
-/* Liquid wave fill inside progress circle */
 .progress-liquid {
   position: absolute;
   inset: 0;
@@ -171,7 +184,7 @@
   left: -10%;
   width: 120%;
   transition: height 0.4s ease;
-  background: linear-gradient(180deg, rgba(115, 128, 101, 0.2) 0%, rgba(115, 128, 101, 0.08) 100%);
+  background: linear-gradient(180deg, rgba(115, 128, 101, 0.18) 0%, rgba(115, 128, 101, 0.06) 100%);
 }
 
 .liquid-wave {
@@ -184,15 +197,9 @@
 }
 
 @keyframes waveMotion {
-  0% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(-25%);
-  }
-  100% {
-    transform: translateX(0);
-  }
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-25%); }
+  100% { transform: translateX(0); }
 }
 
 .progress-text {
@@ -207,8 +214,9 @@
   z-index: 2;
 }
 
-
-/* FULFILLMENT VIEW */
+/* ========================================
+   FULFILLMENT VIEW
+   ======================================== */
 .fulfillment-view {
   animation: fadeIn 0.6s ease-out;
   justify-content: center;
@@ -225,29 +233,30 @@
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 36px;
   padding: 2.5rem 2rem 2rem;
   border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
 }
 
 .ready-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(85, 107, 47, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #556B2F;
   padding: 8px 20px;
   border-radius: 24px;
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 0.2em;
   flex-shrink: 0;
 }
 
@@ -263,14 +272,8 @@
 }
 
 @keyframes dotPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(0.85);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
 }
 
 .fulfillment-title {
@@ -289,19 +292,19 @@
   color: #556B2F;
   margin: 0;
   flex-shrink: 0;
-  letter-spacing: 1px;
+  letter-spacing: 0.2em;
   font-weight: 400;
 }
 
-/* Visual cue - thin chevron with pulse */
+/* Chevron — vertical pulse */
 .visual-cue {
   margin: 0.5rem 0;
-  animation: slideDown 0.8s ease-out 0.4s both;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  animation: slideDown 0.8s ease-out 0.4s both;
 }
 
 .chevron-icon {
@@ -314,31 +317,25 @@
 }
 
 @keyframes chevronPulse {
-  0%, 100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(6px);
-    opacity: 0.5;
-  }
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(6px); opacity: 0.5; }
 }
 
 .cue-text {
-  font-size: 12px;
+  font-size: 11px;
   color: #556B2F;
   margin: 0;
   opacity: 0.6;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 500;
 }
 
-/* Pill-shaped confirm button */
+/* Confirm — forest green pill */
 .pickup-button-pill {
   width: 100%;
   padding: 16px 32px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: #fff;
@@ -346,7 +343,7 @@
   border: none;
   border-radius: 50px;
   cursor: pointer;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   transition: all 0.25s ease;
   box-shadow: 0 4px 16px rgba(45, 59, 30, 0.25);
@@ -364,7 +361,7 @@
   box-shadow: 0 2px 8px rgba(45, 59, 30, 0.2);
 }
 
-/* Order ID footer */
+/* Order footer */
 .order-footer {
   margin-top: auto;
   padding-top: 1.5rem;
@@ -375,46 +372,38 @@
   flex-shrink: 0;
 }
 
-/* Animations */
+/* ========================================
+   ANIMATIONS
+   ======================================== */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Mobile responsiveness */
+/* ========================================
+   MOBILE
+   ======================================== */
 @media (max-width: 480px) {
+  .status-inner {
+    padding: 0.5rem 0.75rem max(0.5rem, env(safe-area-inset-bottom));
+  }
+
   .zen-view {
     gap: 0.75rem;
   }
 
   .video-frame {
-    border: 8px solid rgba(255, 255, 255, 0.85);
+    border: 8px solid rgba(255, 255, 255, 0.7);
     border-radius: 36px;
   }
 
@@ -442,13 +431,8 @@
     font-size: 26px;
   }
 
-  .drink-detail {
-    font-size: 11px;
-  }
-
   .status-message {
     font-size: 10px;
-    letter-spacing: 2.5px;
   }
 
   .progress-container {
@@ -459,7 +443,6 @@
 
   .progress-text {
     font-size: 13px;
-    font-weight: 300;
   }
 
   .chevron-icon {
@@ -468,20 +451,16 @@
   }
 
   .cue-text {
-    font-size: 11px;
-    letter-spacing: 1px;
+    font-size: 10px;
   }
 
   .ready-badge {
     font-size: 9px;
-    letter-spacing: 2.5px;
-    padding: 7px 16px;
   }
 
   .pickup-button-pill {
     padding: 14px 28px;
-    font-size: 13px;
-    letter-spacing: 1.2px;
+    font-size: 12px;
   }
 
   .order-footer {
