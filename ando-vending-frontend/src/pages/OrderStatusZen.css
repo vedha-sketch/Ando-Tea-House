@@ -11,10 +11,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   flex-shrink: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 /* PREPARATION VIEW */
@@ -34,8 +34,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  max-height: 45dvh;
+  flex-shrink: 1;
+  min-height: 0;
 }
 
 .video-placeholder {
@@ -71,10 +71,14 @@
   text-align: center;
   animation: slideUp 0.6s ease-out 0.2s both;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .status-message {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -85,27 +89,27 @@
 
 .drink-name {
   font-family: 'Playfair Display', serif;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 600;
-  margin: 0.5rem 0 0;
+  margin: 0;
   color: #1a1a1a;
   line-height: 1.2;
   flex-shrink: 0;
 }
 
 .drink-detail {
-  font-size: 14px;
+  font-size: 13px;
   color: #a1a1a1;
-  margin: 0.25rem 0 1rem;
+  margin: 0;
   flex-shrink: 0;
 }
 
 /* Progress ring */
 .progress-container {
   position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto;
+  width: 90px;
+  height: 90px;
+  margin: 0.5rem auto 0;
   flex-shrink: 0;
 }
 
@@ -119,36 +123,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #738065;
 }
 
-/* Breathing pulse animation */
-.breathing-pulse {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(115, 128, 101, 0.1) 0%, transparent 70%);
-  animation: breathingPulse 4s ease-in-out infinite;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200%;
-  flex-shrink: 0;
-}
-
-@keyframes breathingPulse {
-  0%, 100% {
-    opacity: 0.3;
-    transform: translateX(-50%) scale(0.8);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translateX(-50%) scale(1.2);
-  }
-}
 
 /* FULFILLMENT VIEW */
 .fulfillment-view {
@@ -334,52 +313,66 @@
 /* Mobile responsiveness */
 @media (max-width: 480px) {
   .zen-view {
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .video-frame {
-    max-height: 40dvh;
     border: 10px solid white;
     border-radius: 40px;
   }
 
   .fulfillment-title {
-    font-size: 32px;
+    font-size: 30px;
   }
 
   .drink-name {
     font-size: 28px;
   }
 
+  .drink-detail {
+    font-size: 12px;
+  }
+
+  .status-message {
+    font-size: 12px;
+  }
+
   .fulfillment-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     margin: 0;
   }
 
   .progress-container {
     width: 80px;
     height: 80px;
+    margin: 0.25rem auto 0;
   }
 
   .progress-text {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .arrow-pointing {
     font-size: 40px;
+    margin-bottom: 0;
   }
 
   .cue-text {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .order-reference {
     padding: 0.75rem;
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
+  }
+
+  .ready-badge {
+    margin-bottom: 0.5rem;
+    font-size: 11px;
   }
 
   .pickup-button {
-    padding: 14px 16px;
-    font-size: 15px;
+    padding: 12px 16px;
+    font-size: 14px;
   }
 }

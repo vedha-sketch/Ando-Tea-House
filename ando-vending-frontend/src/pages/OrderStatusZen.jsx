@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { colors, spacing, borderRadius, shadows, stageMapping } from '../styles/design-system'
 import './OrderStatusZen.css'
 
@@ -26,19 +26,21 @@ function triggerHaptic(pattern = 'pulse') {
   }
 }
 
-function PreparationView({ drink, orderId, videoUrl, progress, onVideoComplete }) {
+function PreparationView({ drink, orderId, videoUrl, videoRef, progress, onVideoComplete, onVideoTimeUpdate }) {
   return (
     <div className="zen-view preparation-view">
-      {/* Framed video container */}
+      {/* Framed video container - can shrink */}
       <div className="video-frame">
         {videoUrl ? (
           <video
+            ref={videoRef}
             src={videoUrl}
             autoPlay
             muted
             playsInline
             className="preparation-video"
             onEnded={onVideoComplete}
+            onTimeUpdate={onVideoTimeUpdate}
             style={{
               objectFit: 'cover',
               width: '100%',
@@ -53,7 +55,7 @@ function PreparationView({ drink, orderId, videoUrl, progress, onVideoComplete }
         )}
       </div>
 
-      {/* Content below video */}
+      {/* Content below video - never shrinks */}
       <div className="preparation-content">
         <p className="status-message" style={{ color: colors.amber }}>
           Ando is Crafting
@@ -89,9 +91,6 @@ function PreparationView({ drink, orderId, videoUrl, progress, onVideoComplete }
           </svg>
           <div className="progress-text">{Math.round(progress)}%</div>
         </div>
-
-        {/* Breathing pulse animation for background */}
-        <div className="breathing-pulse" />
       </div>
     </div>
   )
@@ -156,27 +155,25 @@ function FulfillmentView({ drink, orderId, onPickup }) {
 }
 
 export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) {
-  const [currentStage, setCurrentStage] = useState(4)
   const [progress, setProgress] = useState(0)
   const [currentView, setCurrentView] = useState('PREPARATION')
-  const [videoCompleted, setVideoCompleted] = useState(false)
+  const videoRef = useRef(null)
 
-  const handleVideoComplete = () => {
-    setVideoCompleted(true)
-    // Move to fulfillment stage after video completes
-    setCurrentStage(5)
-    setCurrentView('FULFILLMENT')
+  const handleVideoTimeUpdate = () => {
+    if (videoRef.current) {
+      const { currentTime, duration } = videoRef.current
+      if (duration > 0) {
+        const videoProgress = (currentTime / duration) * 100
+        setProgress(videoProgress)
+      }
+    }
   }
 
-  // Update progress based on stage (only while video is playing)
-  useEffect(() => {
-    if (!videoCompleted) {
-      const stageProgress = (currentStage / 6) * 100
-      setProgress(stageProgress)
-    } else {
-      setProgress(100)
-    }
-  }, [currentStage, videoCompleted])
+  const handleVideoComplete = () => {
+    setProgress(100)
+    setCurrentView('FULFILLMENT')
+    triggerHaptic('ready')
+  }
 
   const drink = orderData || { drinkName: 'Matcha Latte', size: 'Small' }
 
@@ -186,7 +183,7 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
       style={{
         backgroundColor: colors.cream,
         height: '100dvh',
-        padding: `${spacing.lg} ${spacing.lg} max(${spacing.lg}, env(safe-area-inset-bottom))`,
+        padding: `${spacing.md} ${spacing.lg} max(${spacing.md}, env(safe-area-inset-bottom))`,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -200,8 +197,10 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
           drink={drink}
           orderId={orderId}
           videoUrl="/videos/matcha.mp4"
+          videoRef={videoRef}
           progress={progress}
           onVideoComplete={handleVideoComplete}
+          onVideoTimeUpdate={handleVideoTimeUpdate}
         />
       ) : (
         <FulfillmentView
@@ -213,11 +212,6 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
           }}
         />
       )}
-
-      {/* Debug info (remove in production) */}
-      <div style={{ marginTop: spacing.xl, fontSize: '12px', opacity: 0.5 }}>
-        Stage: {currentStage}/6 | View: {currentView}
-      </div>
     </div>
   )
 }
