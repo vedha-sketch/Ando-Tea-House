@@ -2,15 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { colors, spacing, borderRadius, shadows, stageMapping } from '../styles/design-system'
 import './OrderStatusZen.css'
 
-// Stage controller: maps hardware stages to user views
-function getViewFromStage(stage) {
-  if (stageMapping.PREPARATION.stages.includes(stage)) {
-    return 'PREPARATION'
-  }
-  if (stageMapping.FULFILLMENT.stages.includes(stage)) {
-    return 'FULFILLMENT'
-  }
-  return 'PREPARATION'
+// Matcha-cohesive color palette pulled from the video
+const matcha = {
+  vibrant: '#738065',    // vibrant matcha green (progress stroke)
+  soft: '#8a9a7b',       // soft matcha (secondary)
+  cream: '#f3f0e8',      // ceramic bowl cream
+  deep: '#5c6b50',       // deep matcha (dark accent)
 }
 
 // Haptic feedback wrapper
@@ -27,6 +24,10 @@ function triggerHaptic(pattern = 'pulse') {
 }
 
 function PreparationView({ drink, orderId, videoUrl, videoRef, progress, onVideoComplete, onVideoTimeUpdate }) {
+  const circumference = 2 * Math.PI * 45 // ~283
+  const strokeDash = (progress / 100) * circumference
+  const liquidHeight = `${Math.min(progress, 100)}%`
+
   return (
     <div className="zen-view preparation-view">
       {/* Framed video container - can shrink */}
@@ -55,16 +56,30 @@ function PreparationView({ drink, orderId, videoUrl, videoRef, progress, onVideo
         )}
       </div>
 
-      {/* Content below video - never shrinks */}
+      {/* Glassmorphism content panel - never shrinks */}
       <div className="preparation-content">
-        <p className="status-message" style={{ color: colors.amber }}>
+        <p className="status-message">
           Ando is Crafting
         </p>
         <h2 className="drink-name">{drink.drinkName}</h2>
         <p className="drink-detail">{drink.size}</p>
 
-        {/* Progress ring */}
+        {/* Progress ring with liquid wave fill */}
         <div className="progress-container">
+          {/* Liquid wave fill behind the ring */}
+          <div className="progress-liquid">
+            <div className="liquid-fill" style={{ height: liquidHeight }}>
+              <svg className="liquid-wave" viewBox="0 0 200 16" preserveAspectRatio="none">
+                <path
+                  d="M0,8 C25,2 50,14 75,8 C100,2 125,14 150,8 C175,2 200,14 200,8 L200,16 L0,16 Z"
+                  fill={matcha.vibrant}
+                  fillOpacity="0.15"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* SVG ring */}
           <svg className="progress-ring" viewBox="0 0 100 100">
             {/* Background circle */}
             <circle
@@ -72,20 +87,20 @@ function PreparationView({ drink, orderId, videoUrl, videoRef, progress, onVideo
               cy="50"
               r="45"
               fill="none"
-              stroke={colors.stone200}
+              stroke={matcha.cream}
               strokeWidth="2"
             />
-            {/* Progress circle */}
+            {/* Progress circle - matcha green */}
             <circle
               cx="50"
               cy="50"
               r="45"
               fill="none"
-              stroke={colors.amber}
-              strokeWidth="2"
-              strokeDasharray={`${progress * 2.83} 283`}
+              stroke={matcha.vibrant}
+              strokeWidth="2.5"
+              strokeDasharray={`${strokeDash} ${circumference}`}
               strokeLinecap="round"
-              style={{ transition: 'stroke-dasharray 0.3s ease' }}
+              style={{ transition: 'stroke-dasharray 0.4s ease' }}
               transform="rotate(-90 50 50)"
             />
           </svg>
@@ -136,15 +151,15 @@ function FulfillmentView({ drink, orderId, onPickup }) {
           onClick={onPickup}
           className="pickup-button"
           style={{
-            backgroundColor: colors.matcha,
-            color: colors.white,
+            backgroundColor: matcha.vibrant,
+            color: '#fff',
             padding: `${spacing.lg} ${spacing.xl}`,
             borderRadius: borderRadius.lg,
             border: 'none',
             fontSize: '16px',
             fontWeight: 600,
             cursor: 'pointer',
-            marginTop: spacing.xl,
+            marginTop: spacing.md,
           }}
         >
           Confirm Pickup
@@ -181,9 +196,9 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
     <div
       className="zen-order-status"
       style={{
-        backgroundColor: colors.cream,
+        backgroundColor: matcha.cream,
         height: '100dvh',
-        padding: `${spacing.md} ${spacing.lg} max(${spacing.md}, env(safe-area-inset-bottom))`,
+        padding: `${spacing.sm} ${spacing.md} max(${spacing.sm}, env(safe-area-inset-bottom))`,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
