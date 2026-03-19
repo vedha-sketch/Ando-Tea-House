@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { colors, spacing, borderRadius } from '../styles/design-system'
+import { spacing } from '../styles/design-system'
 import './CheckoutZen.css'
 
 export default function CheckoutZen({ sessionId, drink, onPaymentSuccess, onCancel }) {
@@ -12,7 +12,6 @@ export default function CheckoutZen({ sessionId, drink, onPaymentSuccess, onCanc
     setProcessing(true)
     setError(null)
 
-    // Basic card validation
     const cleanCard = cardNumber.replace(/\s/g, '')
     if (cleanCard.length !== 16 || !/^\d+$/.test(cleanCard)) {
       setError('Please enter a valid 16-digit card number.')
@@ -46,25 +45,15 @@ export default function CheckoutZen({ sessionId, drink, onPaymentSuccess, onCanc
   }
 
   return (
-    <div
-      className="zen-checkout"
-      style={{
-        backgroundColor: colors.cream,
-        height: '100dvh',
-        padding: `${spacing.lg} ${spacing.lg} max(${spacing.lg}, env(safe-area-inset-bottom))`,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontFamily: '"Inter", sans-serif',
-        overflow: 'hidden',
-      }}
-    >
+    <div className="zen-checkout">
+      <div className="checkout-bg-gradient" />
+      <div className="checkout-bg-texture" />
+
       <div className="checkout-card">
         {/* Header */}
         <div className="checkout-header">
-          <h1>Complete Payment</h1>
-          <p>Secure and encrypted</p>
+          <p className="checkout-eyebrow">Secure Checkout</p>
+          <h1 className="checkout-title">Complete Payment</h1>
         </div>
 
         {/* Order Summary */}
@@ -103,33 +92,34 @@ export default function CheckoutZen({ sessionId, drink, onPaymentSuccess, onCanc
             <small className="helper-text">Use 4242 4242 4242 4242 for testing</small>
           </div>
 
-          {/* Submit button */}
           <button
             type="submit"
             disabled={processing || !cardNumber.trim()}
-            className="pay-button"
-            style={{
-              backgroundColor: processing || !cardNumber.trim() ? colors.stone300 : colors.matcha,
-              color: colors.white,
-            }}
+            className="pay-button-pill"
           >
             {processing ? 'Processing...' : 'Pay Now'}
           </button>
         </form>
 
-        {/* Cancel button */}
+        {/* Cancel */}
         <button
           onClick={onCancel}
           disabled={processing}
           className="cancel-button-zen"
         >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
           Go Back
         </button>
 
-        {/* Security note */}
+        {/* Security footer */}
         <div className="security-note-zen">
-          <span className="lock-icon">🔒</span>
-          <p>Your payment information is secure and encrypted</p>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <p>Secure and encrypted</p>
         </div>
       </div>
     </div>
