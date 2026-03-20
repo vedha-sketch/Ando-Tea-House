@@ -1,58 +1,101 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap');
 
 /* ========================================
-   GLOBAL: CREAM BG + 100dvh
+   OUTER WRAPPER
    ======================================== */
 .zen-order-status {
   font-family: 'Inter', sans-serif;
   height: 100dvh;
-  overflow: hidden;
-  position: relative;
-  background: #F2F0E9;
-}
-
-.status-bg-gradient {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(85, 107, 47, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 80%, rgba(85, 107, 47, 0.03) 0%, transparent 50%);
-  z-index: 0;
-}
-
-.status-bg-texture {
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23556B2F' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  z-index: 0;
-}
-
-.status-inner {
-  position: relative;
-  z-index: 1;
-  height: 100%;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 0.75rem 1rem max(0.75rem, env(safe-area-inset-bottom));
+  align-items: stretch;
+  padding: max(1.25rem, env(safe-area-inset-top)) 1.25rem max(1.25rem, env(safe-area-inset-bottom));
+  background: #F2F0E9;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
 /* ========================================
-   SHARED VIEW
+   MASTER CARD
    ======================================== */
-.zen-view {
+.zen-order-status .master-card {
   width: 100%;
-  max-width: 500px;
+  max-width: 440px;
+  height: 100%;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 36px;
+  padding: 2.5rem 2rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  animation: slideUp 0.6s ease-out;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ========================================
+   CARD SECTIONS
+   ======================================== */
+.zen-order-status .card-top {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  flex-shrink: 1;
+}
+
+.zen-order-status .card-center {
+  flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   overflow: hidden;
+}
+
+.zen-order-status .card-bottom {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 1rem;
+}
+
+/* ========================================
+   BRAND BLOCK — unified
+   ======================================== */
+.zen-order-status .brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.zen-order-status .brand-logo {
+  width: 63px;
+  height: auto;
+}
+
+.zen-order-status .brand-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #797D76;
+}
+
+.zen-order-status .brand-divider {
+  width: 30px;
+  height: 0.5px;
+  background: #797D76;
+  opacity: 0.4;
+  margin: 0.5rem 0;
 }
 
 /* ========================================
@@ -60,31 +103,21 @@
    ======================================== */
 .preparation-view {
   animation: fadeIn 0.6s ease-out;
+  gap: 0.75rem;
 }
 
 .video-frame {
   width: 100%;
-  aspect-ratio: 9 / 16;
-  border: 10px solid rgba(255, 255, 255, 0.7);
-  border-radius: 48px;
+  flex: 1;
+  min-height: 0;
+  border: 1.5px solid rgba(85, 107, 47, 0.15);
+  border-radius: 32px;
   overflow: hidden;
   background: linear-gradient(135deg, #eae7df 0%, #F2F0E9 100%);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 1;
-  min-height: 0;
-  animation: videoGlow 4s ease-in-out infinite;
-}
-
-@keyframes videoGlow {
-  0%, 100% {
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 0 40px rgba(115, 128, 101, 0.04);
-  }
-  50% {
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 0 60px rgba(115, 128, 101, 0.1);
-  }
 }
 
 .video-placeholder {
@@ -104,7 +137,7 @@
   object-fit: cover;
 }
 
-/* Glassmorphism content panel */
+/* Content panel — no box */
 .preparation-content {
   width: 100%;
   text-align: center;
@@ -113,13 +146,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 28px;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  animation: slideUp 0.6s ease-out 0.2s both;
+  padding: 0.75rem 0 0;
 }
 
 .status-message {
@@ -129,7 +156,6 @@
   text-transform: uppercase;
   margin: 0;
   color: #556B2F;
-  flex-shrink: 0;
 }
 
 .drink-name {
@@ -139,14 +165,12 @@
   margin: 0.25rem 0 0;
   color: #1a1a1a;
   line-height: 1.15;
-  flex-shrink: 0;
 }
 
 .drink-detail {
   font-size: 12px;
   color: #9c9a8e;
   margin: 0;
-  flex-shrink: 0;
   letter-spacing: 0.5px;
   font-weight: 400;
 }
@@ -157,7 +181,6 @@
   width: 80px;
   height: 80px;
   margin: 0.5rem auto 0;
-  flex-shrink: 0;
   animation: progressGlow 4s ease-in-out infinite;
 }
 
@@ -173,7 +196,10 @@
 
 .progress-liquid {
   position: absolute;
-  inset: 0;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -181,8 +207,8 @@
 .liquid-fill {
   position: absolute;
   bottom: 0;
-  left: -10%;
-  width: 120%;
+  left: 0;
+  width: 100%;
   transition: height 0.4s ease;
   background: linear-gradient(180deg, rgba(115, 128, 101, 0.18) 0%, rgba(115, 128, 101, 0.06) 100%);
 }
@@ -217,29 +243,12 @@
 /* ========================================
    FULFILLMENT VIEW
    ======================================== */
-.fulfillment-view {
+.fulfillment-center {
   animation: fadeIn 0.6s ease-out;
   justify-content: center;
-  gap: 0;
-}
-
-/* Glassmorphism card */
-.fulfillment-card {
-  text-align: center;
-  width: 100%;
-  max-width: 400px;
-  animation: slideUp 0.6s ease-out both;
-  display: flex;
-  flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 1.25rem;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 36px;
-  padding: 2.5rem 2rem 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
 }
 
 .ready-badge {
@@ -257,7 +266,6 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  flex-shrink: 0;
 }
 
 .ready-dot {
@@ -284,27 +292,22 @@
   color: #1a1a1a;
   line-height: 1.15;
   letter-spacing: -0.5px;
-  flex-shrink: 0;
 }
 
 .fulfillment-subtitle {
   font-size: 15px;
   color: #556B2F;
   margin: 0;
-  flex-shrink: 0;
   letter-spacing: 0.2em;
   font-weight: 400;
 }
 
-/* Chevron — vertical pulse */
+/* Chevron pulse */
 .visual-cue {
-  margin: 0.5rem 0;
-  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  animation: slideDown 0.8s ease-out 0.4s both;
 }
 
 .chevron-icon {
@@ -325,51 +328,46 @@
   font-size: 11px;
   color: #556B2F;
   margin: 0;
-  opacity: 0.6;
+  opacity: 0.8;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  font-weight: 500;
-}
-
-/* Confirm — forest green pill */
-.pickup-button-pill {
-  width: 100%;
-  padding: 16px 32px;
-  font-size: 13px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  color: #fff;
-  background: #2d3b1e;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(45, 59, 30, 0.25);
+}
+
+/* Fulfillment footer — below card */
+.fulfillment-footer {
   flex-shrink: 0;
-  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1.25rem;
 }
 
-.pickup-button-pill:hover {
-  transform: scale(1.03);
-  box-shadow: 0 6px 24px rgba(45, 59, 30, 0.35);
-}
-
-.pickup-button-pill:active {
-  transform: scale(0.97);
-  box-shadow: 0 2px 8px rgba(45, 59, 30, 0.2);
-}
-
-/* Order footer */
-.order-footer {
-  margin-top: auto;
-  padding-top: 1.5rem;
+.order-footer-text {
   font-size: 10px;
   color: #b5b3aa;
   letter-spacing: 0.5px;
   font-weight: 400;
-  flex-shrink: 0;
+}
+
+/* Dev skip — barely visible */
+.dev-skip-link {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: #797D76;
+  opacity: 0.3;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  letter-spacing: 0.3px;
+  transition: opacity 0.25s ease;
+}
+
+.dev-skip-link:hover {
+  opacity: 0.6;
 }
 
 /* ========================================
@@ -394,29 +392,30 @@
    MOBILE
    ======================================== */
 @media (max-width: 480px) {
-  .status-inner {
-    padding: 0.5rem 0.75rem max(0.5rem, env(safe-area-inset-bottom));
+  .zen-order-status {
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom));
   }
 
-  .zen-view {
-    gap: 0.75rem;
+  .zen-order-status .master-card {
+    border-radius: 30px;
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+
+  .zen-order-status .brand-logo {
+    width: 50px;
+  }
+
+  .preparation-view {
+    gap: 0.5rem;
   }
 
   .video-frame {
-    border: 8px solid rgba(255, 255, 255, 0.7);
-    border-radius: 36px;
+    border-radius: 24px;
   }
 
   .preparation-content {
-    padding: 1rem 1.25rem;
-    border-radius: 24px;
+    padding: 0.5rem 0 0;
     gap: 0.15rem;
-  }
-
-  .fulfillment-card {
-    padding: 2rem 1.5rem 1.5rem;
-    border-radius: 30px;
-    gap: 1rem;
   }
 
   .fulfillment-title {
@@ -458,13 +457,15 @@
     font-size: 9px;
   }
 
-  .pickup-button-pill {
-    padding: 14px 28px;
-    font-size: 12px;
+  .fulfillment-footer {
+    padding-top: 0.75rem;
   }
 
-  .order-footer {
-    padding-top: 1rem;
+  .order-footer-text {
+    font-size: 9px;
+  }
+
+  .dev-skip-link {
     font-size: 9px;
   }
 }

@@ -1,18 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-import { spacing, borderRadius } from '../styles/design-system'
 import './OrderStatusZen.css'
 
-// Unified Ando palette
 const ando = {
   cream: '#F2F0E9',
-  forest: '#2d3b1e',
+  forest: '#697062',
   olive: '#556B2F',
   muted: '#9c9a8e',
   matcha: '#738065',
   ringBg: '#eae7df',
 }
 
-// Haptic feedback wrapper
 function triggerHaptic(pattern = 'pulse') {
   if (!navigator.vibrate) return
   if (pattern === 'pulse') navigator.vibrate([50, 30, 50])
@@ -26,7 +23,7 @@ function PreparationView({ drink, videoUrl, videoRef, progress, onVideoComplete,
   const liquidHeight = `${Math.min(progress, 100)}%`
 
   return (
-    <div className="zen-view preparation-view">
+    <>
       <div className="video-frame">
         {videoUrl ? (
           <video
@@ -78,7 +75,7 @@ function PreparationView({ drink, videoUrl, videoRef, progress, onVideoComplete,
           <div className="progress-text">{Math.round(progress)}%</div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -91,8 +88,8 @@ function FulfillmentView({ drink, orderId, onPickup }) {
   }, [])
 
   return (
-    <div className="zen-view fulfillment-view">
-      <div className="fulfillment-card">
+    <>
+      <div className="card-center fulfillment-center">
         <div className="ready-badge">
           <span className="ready-dot pulse" />
           Ready
@@ -103,20 +100,15 @@ function FulfillmentView({ drink, orderId, onPickup }) {
           {drink.drinkName} · {drink.size}
         </p>
 
-        <div className={`visual-cue ${showAnimation ? 'animate' : ''}`}>
-          <svg className="chevron-icon" viewBox="0 0 24 24" fill="none" stroke={ando.olive} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-          <p className="cue-text">Look for the window</p>
-        </div>
-
-        <button onClick={onPickup} className="pickup-button-pill">
-          Confirm Pickup
-        </button>
       </div>
 
-      <div className="order-footer">Order {orderId}</div>
-    </div>
+      <div className="fulfillment-footer">
+        <span className="order-footer-text">Order {orderId}</span>
+        <button onClick={onPickup} className="dev-skip-link">
+          [ Dev: Skip to Success ]
+        </button>
+      </div>
+    </>
   )
 }
 
@@ -138,23 +130,32 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
     triggerHaptic('ready')
   }
 
-  const drink = orderData || { drinkName: 'Matcha Latte', size: 'Small' }
+  const drink = orderData || { drinkName: 'Your Drink', size: 'Standard' }
+  const videoUrl = orderData?.videoUrl || null
 
   return (
     <div className="zen-order-status">
-      <div className="status-bg-gradient" />
-      <div className="status-bg-texture" />
+      <div className="master-card">
+        {/* TOP: Brand block */}
+        <div className="card-top">
+          <div className="brand-block">
+            <img src="/ando-logo.png" alt="Ando Tea House" className="brand-logo" />
+            <span className="brand-name">Ando Tea House</span>
+          </div>
+          <div className="brand-divider" />
+        </div>
 
-      <div className="status-inner">
         {currentView === 'PREPARATION' ? (
-          <PreparationView
-            drink={drink}
-            videoUrl="/videos/matcha.mp4"
-            videoRef={videoRef}
-            progress={progress}
-            onVideoComplete={handleVideoComplete}
-            onVideoTimeUpdate={handleVideoTimeUpdate}
-          />
+          <div className="card-center preparation-view">
+            <PreparationView
+              drink={drink}
+              videoUrl={videoUrl}
+              videoRef={videoRef}
+              progress={progress}
+              onVideoComplete={handleVideoComplete}
+              onVideoTimeUpdate={handleVideoTimeUpdate}
+            />
+          </div>
         ) : (
           <FulfillmentView
             drink={drink}

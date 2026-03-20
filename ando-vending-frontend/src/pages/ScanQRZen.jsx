@@ -1,194 +1,160 @@
 import { useEffect, useRef, useState } from 'react'
-import { colors, spacing, borderRadius } from '../styles/design-system'
 import './ScanQRZen.css'
 
-export default function ScanQRZen({ onSessionStart }) {
+export default function ScanQRZen({ drink, orderId, onScanComplete, onCancel }) {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
-  const [error, setError] = useState(null)
-  const [scanned, setScanned] = useState(false)
-  const [showManualInput, setShowManualInput] = useState(false)
-  const [manualId, setManualId] = useState('')
-  const [cameraAvailable, setCameraAvailable] = useState(true)
-  const [validating, setValidating] = useState(false)
+  const streamRef = useRef(null)
+  const intervalRef = useRef(null)
+  const [scanning, setScanning] = useState(false)
+  const [cameraReady, setCameraReady] = useState(false)
 
   useEffect(() => {
-    let jsQR = null
-    let interval = null
-
-    const startCamera = async () => {
-      try {
-        const module = await import('jsqr')
-        jsQR = module.default
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' },
-        })
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-          interval = startScanning(jsQR)
-        }
-      } catch (err) {
-        setCameraAvailable(false)
-        setShowManualInput(true)
-        console.error(err)
-      }
-    }
-
     startCamera()
-
     return () => {
-      if (interval) clearInterval(interval)
-      if (videoRef.current?.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach(track => track.stop())
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop())
+        streamRef.current = null
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null
       }
     }
   }, [])
 
-  const startScanning = (jsQR) => {
-    const interval = setInterval(() => {
-      if (videoRef.current && canvasRef.current && jsQR) {
-        const canvas = canvasRef.current
-        const video = videoRef.current
-        const ctx = canvas.getContext('2d')
-
-        canvas.width = video.videoWidth
-        canvas.height = video.videoHeight
-
-        ctx.drawImage(video, 0, 0)
-
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const code = jsQR(imageData.data, imageData.width, imageData.height)
-
-        if (code && !scanned) {
-          setScanned(true)
-          clearInterval(interval)
-          handleQRCodeScanned(code.data)
-        }
+  const startCamera = async () => {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) return
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+      })
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        videoRef.current.play()
       }
-    }, 100)
-
-    return interval
-  }
-
-  const handleQRCodeScanned = (data) => {
-    const sessionId = data.split(':')[0] || data
-    setValidating(true)
-
-    fetch(`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`, {
-      method: 'GET',
-    })
-      .then(res => {
-        if (res.ok) {
-          onSessionStart(sessionId)
-        } else {
-          setError('Invalid QR code. Please try again.')
-          setScanned(false)
-        }
-      })
-      .catch(() => {
-        console.warn('Backend unreachable, starting session locally')
-        onSessionStart(sessionId)
-      })
-      .finally(() => setValidating(false))
-  }
-
-  const handleManualSubmit = (e) => {
-    e.preventDefault()
-    const id = manualId.trim()
-    if (id) {
-      handleQRCodeScanned(id)
+      setScanning(true)
+      setCameraReady(true)
+      intervalRef.current = setInterval(() => scanFrame(), 500)
+    } catch (err) {
+      console.warn('Camera not available:', err.message)
     }
   }
 
+  const stopCamera = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null
+    }
+  }
+
+  const scanFrame = () => {
+    if (!videoRef.current || !canvasRef.current) return
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (video.readyState !== video.HAVE_ENOUGH_DATA) return
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    if ('BarcodeDetector' in window) {
+      const detector = new BarcodeDetector({ formats: ['qr_code'] })
+      detector.detect(canvas).then(barcodes => {
+        if (barcodes.length > 0) handleQRDetected(barcodes[0].rawValue)
+      }).catch(() => {})
+    }
+  }
+
+  const handleQRDetected = (data) => {
+    stopCamera()
+    setScanning(false)
+    if (navigator.vibrate) navigator.vibrate([50, 30, 50])
+    onScanComplete(data)
+  }
+
+  const handleManualStart = () => {
+    stopCamera()
+    setScanning(false)
+    if (navigator.vibrate) navigator.vibrate([50, 30, 50])
+    onScanComplete('manual-trigger')
+  }
+
+  const drinkName = drink?.drinkName || 'Your Drink'
+
   return (
-    <div
-      className="zen-scan"
-      style={{
-        backgroundColor: colors.cream,
-        minHeight: '100vh',
-        padding: spacing.lg,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontFamily: '"Inter", sans-serif',
-      }}
-    >
-      <div className="scan-card">
-        {/* Header */}
-        <div className="scan-header">
-          <h1>Welcome to Ando</h1>
-          <p>Scan the QR code on the machine to begin</p>
+    <div className="zen-scan">
+      <div className="master-card">
+        {/* TOP GROUP: Logo + Brand + Instructions */}
+        <div className="scan-top-group">
+          <img src="/ando-logo.png" alt="Ando Tea House" className="scan-logo" />
+          <span className="scan-brand-text">Ando Tea House</span>
+          <div className="scan-heading-block">
+            <h2 className="scan-heading">Scan Vending Machine QR</h2>
+            <p className="scan-instruction">
+              Position the machine's code within the frame to craft your {drinkName}
+            </p>
+          </div>
         </div>
 
-        {error && <div className="error-message-zen">{error}</div>}
-
-        {/* Camera view */}
-        {cameraAvailable && (
-          <div className="camera-frame">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="camera-feed"
-            />
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
-            {!scanned && <div className="scan-overlay-zen" />}
-            {scanned && <div className="scan-success-zen">✓ QR Code Scanned</div>}
-          </div>
-        )}
-
-        {!cameraAvailable && (
-          <div className="camera-frame">
-            <div className="camera-placeholder-zen">
-              <div className="placeholder-icon">📱</div>
-              <p>Camera not available</p>
-              <p className="placeholder-hint">Enter your session ID below</p>
+        {/* MIDDLE GROUP: Camera */}
+        <div className="scan-camera-group">
+          {cameraReady ? (
+            <div className="scan-viewfinder">
+              <video ref={videoRef} className="scan-video" playsInline muted />
+              <canvas ref={canvasRef} className="scan-canvas" />
+              <div className="viewfinder-corners">
+                <div className="corner corner-tl" />
+                <div className="corner corner-tr" />
+                <div className="corner corner-bl" />
+                <div className="corner corner-br" />
+              </div>
+              {scanning && <div className="scan-line" />}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="scan-qr-placeholder">
+              <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#797D76" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="8" height="8" rx="1" />
+                <rect x="14" y="2" width="8" height="8" rx="1" />
+                <rect x="2" y="14" width="8" height="8" rx="1" />
+                <rect x="5" y="5" width="2" height="2" />
+                <rect x="17" y="5" width="2" height="2" />
+                <rect x="5" y="17" width="2" height="2" />
+                <rect x="14" y="14" width="2" height="2" />
+                <rect x="18" y="14" width="2" height="2" />
+                <rect x="14" y="18" width="2" height="2" />
+                <rect x="18" y="18" width="2" height="2" />
+              </svg>
+            </div>
+          )}
+        </div>
 
-        {/* Input/Actions */}
-        {showManualInput ? (
-          <form onSubmit={handleManualSubmit} className="manual-form-zen">
-            <input
-              type="text"
-              placeholder="Enter Session ID"
-              value={manualId}
-              onChange={(e) => setManualId(e.target.value)}
-              disabled={validating}
-              autoFocus
-              className="session-input"
-            />
-            <button
-              type="submit"
-              disabled={validating || !manualId.trim()}
-              className="connect-button"
-              style={{
-                backgroundColor: validating || !manualId.trim() ? colors.stone300 : colors.matcha,
-                color: colors.white,
-              }}
-            >
-              {validating ? 'Connecting...' : 'Connect'}
+        {/* BOTTOM GROUP: Info + Actions */}
+        <div className="scan-bottom-group">
+          <div className="scan-info-actions">
+            <span className="scan-order-badge">{drink?.size} · ${drink?.price?.toFixed(2)}</span>
+            <button onClick={handleManualStart} className="scan-skip-link">
+              {cameraReady ? 'Start without scanning' : 'Begin preparation'}
             </button>
-          </form>
-        ) : (
-          <button
-            onClick={() => setShowManualInput(true)}
-            className="enter-manually-btn"
-          >
-            Enter ID Manually
-          </button>
-        )}
+          </div>
 
-        {/* Dev mode button */}
-        <button
-          onClick={() => onSessionStart(`dev-${Date.now()}`)}
-          className="dev-mode-btn"
-        >
-          Skip — Dev Mode
-        </button>
+          <button onClick={onCancel} className="scan-goback-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Go Back
+          </button>
+        </div>
       </div>
     </div>
   )

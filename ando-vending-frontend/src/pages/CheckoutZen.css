@@ -1,61 +1,106 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap');
 
 /* ========================================
-   LAYOUT & BACKGROUND
+   OUTER WRAPPER
    ======================================== */
 .zen-checkout {
   font-family: 'Inter', sans-serif;
   height: 100dvh;
-  overflow: hidden;
+  width: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  padding: 1.5rem 1.25rem max(1.5rem, env(safe-area-inset-bottom));
-  position: relative;
+  align-items: stretch;
+  padding: max(1.25rem, env(safe-area-inset-top)) 1.25rem max(1.25rem, env(safe-area-inset-bottom));
   background: #F2F0E9;
-}
-
-.checkout-bg-gradient {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(85, 107, 47, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 80%, rgba(85, 107, 47, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(243, 240, 232, 1) 0%, rgba(235, 230, 218, 1) 100%);
-  z-index: 0;
-}
-
-.checkout-bg-texture {
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23556B2F' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  z-index: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* ========================================
-   GLASSMORPHISM CARD
+   MASTER CARD
    ======================================== */
-.checkout-card {
+.zen-checkout .master-card {
   width: 100%;
   max-width: 420px;
+  height: 100%;
+  margin: 0 auto;
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 36px;
-  padding: 2.5rem 2rem;
+  padding: 2.5rem 2rem 2rem;
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
   animation: slideUp 0.6s ease-out;
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
-  max-height: 90dvh;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* ========================================
+   CARD SECTIONS
+   ======================================== */
+.zen-checkout .card-top {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zen-checkout .card-center {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.zen-checkout .card-center::-webkit-scrollbar {
+  display: none;
+}
+
+.zen-checkout .card-bottom {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 1rem;
+}
+
+/* ========================================
+   BRAND BLOCK — unified
+   ======================================== */
+.zen-checkout .brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.zen-checkout .brand-logo {
+  width: 63px;
+  height: auto;
+}
+
+.zen-checkout .brand-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #797D76;
+}
+
+.zen-checkout .brand-divider {
+  width: 30px;
+  height: 0.5px;
+  background: #797D76;
+  opacity: 0.4;
+  margin: 0.5rem 0 1rem;
 }
 
 /* ========================================
@@ -64,7 +109,7 @@
 .checkout-header {
   text-align: center;
   margin-bottom: 1.5rem;
-  flex-shrink: 0;
+  width: 100%;
 }
 
 .checkout-eyebrow {
@@ -96,7 +141,7 @@
   padding: 18px;
   margin-bottom: 1.5rem;
   border: 1px solid rgba(85, 107, 47, 0.06);
-  flex-shrink: 0;
+  width: 100%;
 }
 
 .summary-item {
@@ -138,7 +183,7 @@
 .summary-value-total {
   font-size: 18px;
   font-weight: 600;
-  color: #556B2F;
+  color: #697062;
   letter-spacing: 0.5px;
 }
 
@@ -153,9 +198,9 @@
   padding: 12px 16px;
   border-radius: 16px;
   font-size: 13px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   animation: shake 0.3s ease-out;
-  flex-shrink: 0;
+  width: 100%;
 }
 
 @keyframes shake {
@@ -168,13 +213,11 @@
    FORM
    ======================================== */
 .payment-form-zen {
-  margin-bottom: 1rem;
-  flex-shrink: 0;
+  width: 100%;
 }
 
 .form-group-zen {
-  margin-bottom: 1.5rem;
-  flex-shrink: 0;
+  margin-bottom: 0;
 }
 
 .form-label {
@@ -238,20 +281,19 @@
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: #fff;
-  background: #2d3b1e;
+  background: #697062;
   border: none;
   border-radius: 50px;
   cursor: pointer;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(45, 59, 30, 0.25);
-  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(105, 112, 98, 0.25);
 }
 
 .pay-button-pill:hover:not(:disabled) {
   transform: scale(1.02);
-  box-shadow: 0 6px 24px rgba(45, 59, 30, 0.35);
+  box-shadow: 0 6px 24px rgba(105, 112, 98, 0.35);
 }
 
 .pay-button-pill:active:not(:disabled) {
@@ -265,7 +307,7 @@
   opacity: 0.6;
 }
 
-.cancel-button-zen {
+.zen-checkout .goback-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -282,16 +324,15 @@
   cursor: pointer;
   transition: all 0.25s ease;
   letter-spacing: 0.5px;
-  margin-bottom: 1.25rem;
-  flex-shrink: 0;
+  margin-top: 0.75rem;
 }
 
-.cancel-button-zen:hover:not(:disabled) {
+.zen-checkout .goback-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.4);
   border-color: rgba(85, 107, 47, 0.25);
 }
 
-.cancel-button-zen:disabled {
+.zen-checkout .goback-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
@@ -307,8 +348,8 @@
   font-size: 10px;
   color: #b5b3aa;
   text-align: center;
-  flex-shrink: 0;
   letter-spacing: 0.3px;
+  margin-top: 0.75rem;
 }
 
 .security-note-zen p {
@@ -334,13 +375,16 @@
    ======================================== */
 @media (max-width: 480px) {
   .zen-checkout {
-    padding: 1rem 1rem max(1rem, env(safe-area-inset-bottom));
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom));
   }
 
-  .checkout-card {
+  .zen-checkout .master-card {
     border-radius: 30px;
-    padding: 2rem 1.5rem;
-    max-height: calc(100dvh - 2rem - env(safe-area-inset-bottom));
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+
+  .zen-checkout .brand-logo {
+    width: 50px;
   }
 
   .checkout-header {
@@ -366,10 +410,6 @@
     font-size: 12px;
   }
 
-  .form-group-zen {
-    margin-bottom: 1.25rem;
-  }
-
   .card-input {
     padding: 12px 14px;
     font-size: 15px;
@@ -382,9 +422,8 @@
     letter-spacing: 1.5px;
   }
 
-  .cancel-button-zen {
+  .zen-checkout .goback-btn {
     padding: 10px;
     font-size: 12px;
-    margin-bottom: 1rem;
   }
 }
