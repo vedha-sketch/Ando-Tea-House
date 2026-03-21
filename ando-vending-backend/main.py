@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 
-from app.routes import menu, orders, health
+from app.routes import menu, orders, health, tanzaku, hardware
 from app.websockets import manager as ws_manager
 
 logging.basicConfig(level=logging.INFO)
@@ -39,6 +39,8 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(menu.router, prefix="/api", tags=["menu"])
 app.include_router(orders.router, prefix="/api", tags=["orders"])
+app.include_router(tanzaku.router, prefix="/api", tags=["tanzaku"])
+app.include_router(hardware.router, prefix="/api", tags=["hardware"])
 
 # WebSocket endpoint
 @app.websocket("/ws/{order_id}")

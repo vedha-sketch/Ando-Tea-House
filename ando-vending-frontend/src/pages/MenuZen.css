@@ -215,13 +215,13 @@
 }
 
 .drink-card-zen:hover {
-  transform: scale(1.02);
-  box-shadow: 0 12px 40px rgba(85, 107, 47, 0.08);
   background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(121, 125, 118, 0.15);
 }
 
 .drink-card-zen:active {
-  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(121, 125, 118, 0.25);
 }
 
 .drink-icon {
@@ -363,7 +363,6 @@
 
 .size-card-zen:hover:not(.active) {
   background: rgba(255, 255, 255, 0.7);
-  border-color: rgba(121, 125, 118, 0.08);
 }
 
 .size-card-zen.active {

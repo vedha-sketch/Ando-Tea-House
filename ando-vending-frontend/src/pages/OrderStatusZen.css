@@ -137,6 +137,11 @@
   object-fit: cover;
 }
 
+/* Preparation view — relative for tanzaku overlay */
+.preparation-view {
+  position: relative;
+}
+
 /* Content panel — no box */
 .preparation-content {
   width: 100%;

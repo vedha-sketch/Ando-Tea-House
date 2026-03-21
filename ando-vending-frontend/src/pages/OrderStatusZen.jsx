@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import DigitalTanzaku from '../components/DigitalTanzaku'
 import './OrderStatusZen.css'
 
 const ando = {
@@ -80,10 +81,7 @@ function PreparationView({ drink, videoUrl, videoRef, progress, onVideoComplete,
 }
 
 function FulfillmentView({ drink, orderId, onPickup }) {
-  const [showAnimation, setShowAnimation] = useState(false)
-
   useEffect(() => {
-    setShowAnimation(true)
     triggerHaptic('ready')
   }, [])
 
@@ -99,7 +97,6 @@ function FulfillmentView({ drink, orderId, onPickup }) {
         <p className="fulfillment-subtitle">
           {drink.drinkName} · {drink.size}
         </p>
-
       </div>
 
       <div className="fulfillment-footer">
@@ -112,9 +109,22 @@ function FulfillmentView({ drink, orderId, onPickup }) {
   )
 }
 
+/**
+ * OrderStatusZen — Preparation → Tanzaku → Fulfillment
+ *
+ * Sequencing logic:
+ *   1. PREPARATION view plays (video + progress ring)
+ *   2. Tanzaku prompt appears 3s in as an overlay
+ *   3a. User IGNORES tanzaku → video ends → FULFILLMENT
+ *   3b. User ENGAGES tanzaku → video continues underneath → tanzaku takes over screen
+ *       → When video ends: tanzaku waits, elevator pauses
+ *       → User makes print/let-go decision → elevator resumes → FULFILLMENT
+ */
 export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) {
   const [progress, setProgress] = useState(0)
-  const [currentView, setCurrentView] = useState('PREPARATION')
+  const [currentView, setCurrentView] = useState('PREPARATION') // PREPARATION | FULFILLMENT
+  const [preparationComplete, setPreparationComplete] = useState(false)
+  const tanzakuEngagedRef = useRef(false) // ref so video callback always reads latest
   const videoRef = useRef(null)
 
   const handleVideoTimeUpdate = () => {
@@ -124,18 +134,37 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
     }
   }
 
-  const handleVideoComplete = () => {
+  const handleVideoComplete = useCallback(() => {
     setProgress(100)
+    setPreparationComplete(true)
+
+    // Check the ref (not state) so we always see the latest value
+    if (!tanzakuEngagedRef.current) {
+      // User did NOT engage with tanzaku → go straight to fulfillment
+      setCurrentView('FULFILLMENT')
+      triggerHaptic('ready')
+    }
+    // If user IS engaged → tanzaku component will detect
+    // preparationComplete=true and show print/let-go choice.
+  }, []) // no dependency on state — uses ref instead
+
+  // Called when user clicks "Enter the Grove"
+  const handleTanzakuEngaged = useCallback(() => {
+    tanzakuEngagedRef.current = true
+  }, [])
+
+  // Called after fly-away animation completes (user printed or let go)
+  const handleTanzakuDecisionComplete = useCallback(() => {
     setCurrentView('FULFILLMENT')
     triggerHaptic('ready')
-  }
+  }, [])
 
   const drink = orderData || { drinkName: 'Your Drink', size: 'Standard' }
   const videoUrl = orderData?.videoUrl || null
 
   return (
     <div className="zen-order-status">
-      <div className="master-card">
+      <div className="master-card" style={{ position: 'relative' }}>
         {/* TOP: Brand block */}
         <div className="card-top">
           <div className="brand-block">
@@ -154,6 +183,13 @@ export default function OrderStatusZen({ orderId, orderData, onOrderComplete }) 
               progress={progress}
               onVideoComplete={handleVideoComplete}
               onVideoTimeUpdate={handleVideoTimeUpdate}
+            />
+            {/* Tanzaku overlays preparation — video keeps playing underneath */}
+            <DigitalTanzaku
+              drinkName={drink.drinkName}
+              preparationComplete={preparationComplete}
+              onEngaged={handleTanzakuEngaged}
+              onDecisionComplete={handleTanzakuDecisionComplete}
             />
           </div>
         ) : (

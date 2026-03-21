@@ -4,12 +4,12 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), basicSsl()],
+  plugins: [react(), ...(process.env.DISABLE_SSL ? [] : [basicSsl()])],
   server: {
     // Proxy API calls through Vite so there's no mixed-content issue
     proxy: {
       '/api': {
-        target: 'http://172.16.13.118:8000',
+        target: 'http://localhost:8000',
         changeOrigin: true,
       },
     },
